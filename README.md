@@ -9,8 +9,6 @@ Template Code for TOC Project 2020
 
 A Line bot based on a finite state machine
 
-More details in the [Slides](https://hackmd.io/@TTW/ToC-2019-Project#) and [FAQ](https://hackmd.io/s/B1Xw7E8kN)
-
 ## Setup
 
 ### Prerequisite
@@ -31,25 +29,9 @@ pipenv shell
 ```
 
 * pygraphviz (For visualizing Finite State Machine)
-    * [Setup pygraphviz on Ubuntu](http://www.jianshu.com/p/a3da7ecc5303)
-	* [Note: macOS Install error](https://github.com/pygraphviz/pygraphviz/issues/100)
 
-
-#### Secret Data
-You should generate a `.env` file to set Environment Variables refer to our `.env.sample`.
-`LINE_CHANNEL_SECRET` and `LINE_CHANNEL_ACCESS_TOKEN` **MUST** be set to proper values.
-Otherwise, you might not be able to run your code.
-
-#### Run Locally
-You can either setup https server or using `ngrok` as a proxy.
 
 #### a. Ngrok installation
-* [ macOS, Windows, Linux](https://ngrok.com/download)
-
-or you can use Homebrew (MAC)
-```sh
-brew cask install ngrok
-```
 
 **`ngrok` would be used in the following instruction**
 
@@ -62,7 +44,7 @@ After that, `ngrok` would generate a https URL.
 #### Run the sever
 
 ```sh
-python3 app.py
+python app.py
 ```
 
 #### b. Servo
@@ -71,7 +53,7 @@ Or You can use [servo](http://serveo.net/) to expose local servers to the intern
 
 
 ## Finite State Machine
-![fsm](./img/show-fsm.png)
+![fsm](./img/fsm.png)
 
 ## Usage
 The initial state is set to `user`.
@@ -79,28 +61,64 @@ The initial state is set to `user`.
 Every time `user` state is triggered to `advance` to another state, it will `go_back` to `user` state after the bot replies corresponding message.
 
 * user
-	* Input: "go to state1"
-		* Reply: "I'm entering state1"
-
-	* Input: "go to state2"
-		* Reply: "I'm entering state2"
+	* Input: "男"
+		* Reply:  "小王子 您好，請輸入您的生日～"
+		* Enter state: "gender"
+	* Input: "女"
+		* Reply:  "小公主 您好，請輸入您的生日～"
+		* Enter state: "gender"
+* gender
+	* Input: "1/21" ~ "2/19"
+		* Reply:  "您是 水瓶座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Aquarius"
+	* Input: "2/20" ~ "3/20"
+		* Reply:  "您是 雙魚座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Pisces"
+	* Input: "3/21" ~ "4/19"
+		* Reply:  "您是 牡羊座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Aries"
+	* Input: "4/20" ~ "5/20"
+		* Reply:  "您是 金牛座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Taurus"
+	* Input: "5/21" ~ "6/21"
+		* Reply:  "您是 雙子座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Gemini"
+	* Input: "6/22" ~ "7/22"
+		* Reply:  "您是 巨蟹座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Cancer"
+	* Input: "7/23" ~ "8/22"
+		* Reply:  "您是 獅子座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Leo"
+	* Input: "8/23" ~ "9/22"
+		* Reply:  "您是 處女座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Virgo"
+	* Input: "9/23" ~ "10/23"
+		* Reply:  "您是 天秤座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Libra"
+	* Input: "10/24" ~ "11/21"
+		* Reply:  "您是 天蠍座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Scorpio"
+	* Input: "11/22" ~ "12/20"
+		* Reply:  "您是 射手座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Sagittarius"
+	* Input: "12/21" ~ "1/20"
+		* Reply:  "您是 摩羯座 喔～\n請輸入對方的生日!!!"
+		* Enter state: "Capricorn"
+* Aries、Taurus、Gemini、Cancer、Leo、Virgo、Libra、Scorpio、Sagittarius、Capricorn、Aquarius、Pisces
+    * Input: "xx/yy"
+    	* Algorithm:  從男女生日配對得到男方星座、女方星座，藉由查表對應至星座速配指數並回傳、對應的分數區會得到對應的祝福語，自動回復到user
+		* Reply:  
+			* 指數 = 99: "你們最好不要在一起，不然赤道的太陽都沒你們閃＾＿＾"
+			* 指數 = 90 - 99: "不追就是憑實力單身了喔＾＿＾"
+			* 指數 = 80 - 89: "你們很配，錯失機會就準備當好朋友吧~"
+			* 指數 = 70 - 79: "相處起來還挺不錯，真的啦～"
+			* 指數 = 60 - 69: "時有火花、偶有摩擦\n幫他撥蝦、還算不差"
+			* 指數 = 50 - 59: "其實最能長久的戀情，往往都不是最速配的愛情"
+			* 指數 = < 50: "冤家"
+		* Enter state: "user"
 
 ## Deploy
 Setting to deploy webhooks on Heroku.
-
-### Heroku CLI installation
-
-* [macOS, Windows](https://devcenter.heroku.com/articles/heroku-cli)
-
-or you can use Homebrew (MAC)
-```sh
-brew tap heroku/brew && brew install heroku
-```
-
-or you can use Snap (Ubuntu 16+)
-```sh
-sudo snap install --classic heroku
-```
 
 ### Connect to Heroku
 
@@ -125,35 +143,3 @@ sudo snap install --classic heroku
 	git commit -m "Add code"
 	git push -f heroku master
 	```
-
-3. Set Environment - Line Messaging API Secret Keys
-
-	```
-	heroku config:set LINE_CHANNEL_SECRET=your_line_channel_secret
-	heroku config:set LINE_CHANNEL_ACCESS_TOKEN=your_line_channel_access_token
-	```
-
-4. Your Project is now running on Heroku!
-
-	url: `{HEROKU_APP_NAME}.herokuapp.com/callback`
-
-	debug command: `heroku logs --tail --app {HEROKU_APP_NAME}`
-
-5. If fail with `pygraphviz` install errors
-
-	run commands below can solve the problems
-	```
-	heroku buildpacks:set heroku/python
-	heroku buildpacks:add --index 1 heroku-community/apt
-	```
-
-	refference: https://hackmd.io/@ccw/B1Xw7E8kN?type=view#Q2-如何在-Heroku-使用-pygraphviz
-
-## Reference
-[Pipenv](https://medium.com/@chihsuan/pipenv-更簡單-更快速的-python-套件管理工具-135a47e504f4) ❤️ [@chihsuan](https://github.com/chihsuan)
-
-[TOC-Project-2019](https://github.com/winonecheng/TOC-Project-2019) ❤️ [@winonecheng](https://github.com/winonecheng)
-
-Flask Architecture ❤️ [@Sirius207](https://github.com/Sirius207)
-
-[Line line-bot-sdk-python](https://github.com/line/line-bot-sdk-python/tree/master/examples/flask-echo)
